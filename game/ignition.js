@@ -1,9 +1,11 @@
 import Engine from 'engine';
 
-Engine.start();
+const engine = new Engine();
+
+engine.start();
 
 setInterval(
-  () => Engine.stop(),
+  () => engine.stop(),
   5 * 1000
 );
 

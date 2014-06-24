@@ -3,16 +3,21 @@
 
 class Engine {
 
+  constructor () this.frame = 0
+
   frameBuilder () {
     let now;
     let dt   = 0;
     let last = this.timestamp();
     let step = 1/60;
 
-    let update = (step) => console.log( this.timestamp(), 'update', step );
-    let render = (dt)   => console.log( this.timestamp(), 'render', dt );
+    let update = (step) => console.log( 'update, ts:', this.timestamp(), ', step:', step );
+    let render = (dt)   => console.log( 'render, ts:', this.timestamp(), ', delta:', dt );
 
     let frame = () => {
+      this.incrementFrame();
+      console.log('frame:',this.frame);
+
       now = this.timestamp();
       dt  = dt + Math.min(1, (now - last) / 1000);
 
@@ -25,15 +30,24 @@ class Engine {
 
       last = now;
 
-      if (!this.stop) requestAnimationFrame(frame);
+      if (this.running) requestAnimationFrame(frame);
+      else console.log('stopped');
     };
 
     return frame;
   }
 
-  start () requestAnimationFrame( this.frameBuilder() )
+  incrementFrame () this.frame = this.frame + 1;
 
-  stop () this.stop = false
+  start () {
+    this.running = true;
+    requestAnimationFrame( this.frameBuilder() );
+  }
+
+  stop () {
+    this.running = false;
+    console.log('stopping...');
+  }
 
   timestamp () window.performance.now()
 

@@ -4,10 +4,12 @@ define("ignition",
     "use strict";
     var Engine = __dependency1__["default"];
 
-    Engine.start();
+    var engine = new Engine();
+
+    engine.start();
 
     setInterval(
-      function()  {return Engine.stop = true},
+      function()  {return engine.stop()},
       5 * 1000
     );
   });
