@@ -8,7 +8,7 @@ define("ignition",
 
     engine.start();
 
-    setInterval(
+    setTimeout(
       function()  {return engine.stop()},
       5 * 1000
     );

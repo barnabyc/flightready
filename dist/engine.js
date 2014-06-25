@@ -1,26 +1,32 @@
 define("engine",
-  ["exports"],
-  function(__exports__) {
+  ["interfaces/render","exports"],
+  function(__dependency1__, __exports__) {
     "use strict";
     // import Update from 'game/interfaces/update.js';
-    // import Render from 'game/interfaces/render.js';
+    var RenderInterface = __dependency1__["default"];
+
+    var renderInterface = new RenderInterface();
 
     var Engine = (function(){
 
-      function Engine () {return this.frame = 0}
+      function Engine () { this.frameCounter = 0; this.frameLogger = []; }
 
       Engine.prototype.frameBuilder = function () {var this$0 = this;
         var now;
         var dt   = 0;
         var last = this.timestamp();
-        var step = 1/60;
+        var step = 1/60; // fps
 
-        var update = function(step)  {return console.log( 'update, ts:', this$0.timestamp(), ', step:', step )};
-        var render = function(dt)    {return console.log( 'render, ts:', this$0.timestamp(), ', delta:', dt )};
+        var update = function(step)  {
+          // console.log( 'update, ts:', this.timestamp(), ', step:', step );
+        }
+        var render = function(dt)    {
+          // console.log( 'render, ts:', this.timestamp(), ', delta:', dt );
+          renderInterface.progress();
+        }
 
-        var frame = function()  {
-          this$0.incrementFrame();
-          console.log('frame:',this$0.frame);
+        var frame = function()  {function ITER$0(v,f){var $Symbol_iterator=typeof Symbol!=='undefined'&&Symbol.iterator||'@@iterator';if(v){if(Array.isArray(v))return f?v.slice():v;var i,r;if(typeof v==='object'&&typeof (f=v[$Symbol_iterator])==='function'){i=f.call(v);r=[];while((f=i['next']()),f['done']!==true)r.push(f['value']);return r;}}throw new Error(v+' is not iterable')};
+          this$0.incrementFrameCounter(this$0.frameCounter / (last / 1000));
 
           now = this$0.timestamp();
           dt  = dt + Math.min(1, (now - last) / 1000);
@@ -35,16 +41,27 @@ define("engine",
           last = now;
 
           if (this$0.running) requestAnimationFrame(frame);
-          else console.log('stopped');
+          else {
+            console.log('stopped');
+            console.log(
+              'min:',Math.min.apply(Math, ITER$0(this$0.frameLogger)),
+              'max:',Math.max.apply(Math, ITER$0(this$0.frameLogger)),
+              'avg:',this$0.frameLogger.reduce(function(memo,val)  {return memo + val}) / this$0.frameLogger.length
+            );
+          }
         };
 
         return frame;
       }
 
-      Engine.prototype.incrementFrame = function () {return this.frame = this.frame + 1};
+      Engine.prototype.incrementFrameCounter = function (log) {
+        this.frameCounter = this.frameCounter + 1;
+        this.frameLogger.push( log )
+      }
 
       Engine.prototype.start = function () {
         this.running = true;
+        console.log('starting...');
         requestAnimationFrame( this.frameBuilder() );
       }
 
