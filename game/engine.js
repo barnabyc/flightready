@@ -1,6 +1,9 @@
-// import Update from 'game/interfaces/update.js';
+import UpdateInterface from 'interfaces/update';
 import RenderInterface from 'interfaces/render';
 
+let thing = { cx: 0, cy: 0 };
+
+const updateInterface = new UpdateInterface( thing );
 const renderInterface = new RenderInterface();
 
 class Engine {
@@ -13,15 +16,17 @@ class Engine {
     let last = this.timestamp();
     let step = 1/60; // fps
 
-    let update = (step) => {
+    const update = (step) => {
       // console.log( 'update, ts:', this.timestamp(), ', step:', step );
-    }
-    let render = (dt)   => {
-      // console.log( 'render, ts:', this.timestamp(), ', delta:', dt );
-      renderInterface.progress();
+      updateInterface.update();
     }
 
-    let frame = () => {
+    const render = (dt)   => {
+      // console.log( 'render, ts:', this.timestamp(), ', delta:', dt );
+      renderInterface.progress( updateInterface.entities );
+    }
+
+    const frame = () => {
       this.incrementFrameCounter(this.frameCounter / (last / 1000));
 
       now = this.timestamp();

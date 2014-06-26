@@ -6,6 +6,6 @@ engine.start();
 
 setTimeout(
   () => engine.stop(),
-  5 * 1000
+  2 * 1000 // 2 seconds
 );
 

@@ -10,6 +10,6 @@ define("ignition",
 
     setTimeout(
       function()  {return engine.stop()},
-      5 * 1000
+      2 * 1000 // 2 seconds
     );
   });
