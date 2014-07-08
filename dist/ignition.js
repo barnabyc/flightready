@@ -8,8 +8,5 @@ define("ignition",
 
     engine.start();
 
-    setTimeout(
-      function()  {return engine.stop()},
-      2 * 1000 // 2 seconds
-    );
+    window.stopEngine = function()  {return engine.stop()};
   });
